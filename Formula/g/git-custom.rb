@@ -2,8 +2,8 @@ class GitCustom < Formula
   desc "Distributed revision control system"
   homepage "https://git-scm.com"
   # Don't forget to update the documentation resources along with the url!
-  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.41.0.tar.xz"
-  sha256 "e748bafd424cfe80b212cbc6f1bbccc3a47d4862fb1eb7988877750478568040"
+  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.42.0.tar.xz"
+  sha256 "3278210e9fd2994b8484dd7e3ddd9ea8b940ef52170cdb606daa94d887c93b0d"
   license "GPL-2.0-only"
   head "https://github.com/git/git.git", branch: "master"
 
@@ -22,19 +22,19 @@ class GitCustom < Formula
 
   on_linux do
     depends_on "linux-headers@5.15" => :build
-    depends_on "openssl@1.1" # Uses CommonCrypto on macOS
+    depends_on "openssl@3" # Uses CommonCrypto on macOS
   end
 
   conflicts_with "git", because: "both provide git with only different build flags"
 
   resource "html" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.41.0.tar.xz"
-    sha256 "0cb2d4a09270eede7c1b686e2dfeac9bffef9e42c117a7e120f3cbb3e665d286"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.42.0.tar.xz"
+    sha256 "c027ad23614d19685677899527360985ec9186e97528084dc4f8d611f6c3483f"
   end
 
   resource "man" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.41.0.tar.xz"
-    sha256 "bc7a4c944492c76fc3cd766ce22e826d0241e43792c611d4fdc068e0df545877"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.42.0.tar.xz"
+    sha256 "03e0dc60a077ad31b10119e6619af8b50e652bd5c8a95c891523d73af1e573b9"
   end
 
   resource "Net::SMTP::SSL" do
@@ -46,7 +46,7 @@ class GitCustom < Formula
     # If these things are installed, tell Git build system not to use them
     ENV["NO_FINK"] = "1"
     ENV["NO_DARWIN_PORTS"] = "1"
-    ENV["PYTHON_PATH"] = which("python")
+    ENV["PYTHON_PATH"] = which("python3")
     ENV["PERL_PATH"] = which("perl")
     ENV["USE_LIBPCRE2"] = "1"
     ENV["INSTALL_SYMLINKS"] = "1"
@@ -81,10 +81,14 @@ class GitCustom < Formula
     args += if OS.mac?
       %W[NO_OPENSSL=1 APPLE_COMMON_CRYPTO=1 SHELL_PATH=#{HOMEBREW_PREFIX}/bin/bash]
     else
-      openssl_prefix = Formula["openssl@1.1"].opt_prefix
+      openssl_prefix = Formula["openssl@3"].opt_prefix
 
       %W[NO_APPLE_COMMON_CRYPTO=1 OPENSSLDIR=#{openssl_prefix}]
     end
+
+    # Make sure `git` looks in `opt_prefix` instead of the Cellar.
+    # Otherwise, Cellar references propagate to generated plists from `git maintenance`.
+    inreplace "Makefile", /(-DFALLBACK_RUNTIME_PREFIX=")[^"]+/, "\\1#{opt_prefix}"
 
     system "make", "install", *args
 
@@ -179,16 +183,21 @@ class GitCustom < Formula
     system bin/"git", "commit", "-a", "-m", "Initial Commit"
     assert_equal "haunted\nhouse", shell_output("#{bin}/git ls-files").strip
 
+    # Check that our `inreplace` for the `Makefile` does not break.
+    # If this assertion fails, please fix the `inreplace` instead of removing this test.
+    # The failure of this test means that `git` will generate broken launchctl plist files.
+    refute_match HOMEBREW_CELLAR.to_s, shell_output("#{bin}/git --exec-path")
+
+    return unless OS.mac?
+
     # Check Net::SMTP or Net::SMTP::SSL works for git-send-email
-    if OS.mac?
-      %w[foo bar].each { |f| touch testpath/f }
-      system bin/"git", "add", "foo", "bar"
-      system bin/"git", "commit", "-a", "-m", "Second Commit"
-      assert_match "Authentication Required", pipe_output(
-        "#{bin}/git send-email --from=test@example.com --to=dev@null.com " \
-        "--smtp-server=smtp.gmail.com --smtp-server-port=587 " \
-        "--smtp-encryption=tls --confirm=never HEAD^ 2>&1",
-      )
-    end
+    %w[foo bar].each { |f| touch testpath/f }
+    system bin/"git", "add", "foo", "bar"
+    system bin/"git", "commit", "-a", "-m", "Second Commit"
+    assert_match "Authentication Required", pipe_output(
+      "#{bin}/git send-email --from=test@example.com --to=dev@null.com " \
+      "--smtp-server=smtp.gmail.com --smtp-server-port=587 " \
+      "--smtp-encryption=tls --confirm=never HEAD^ 2>&1",
+    )
   end
 end
