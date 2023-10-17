@@ -26,6 +26,6 @@ done < <(git -C ./homebrew-core log --format='%H' --perl-regexp --author='^(?!Br
 printf 'Applying commits %s\n' "${commits[*]}"
 
 for commit in "${commits[@]}"; do
-    git -C ./homebrew-core show "$commit" | sed 's/git.rb/git-custom.rb/g' | git apply -C1
+    git -C ./homebrew-core show "$commit" -- ./Formula/git.rb ./Formula/g/git.rb | sed 's/git.rb/git-custom.rb/g' | git apply -C1
     printf '%s\n' "$commit" | tee ./homebrew_core_commit
 done
