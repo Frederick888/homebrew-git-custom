@@ -30,6 +30,7 @@ jobs:
           branch="auto-$(date --rfc-3339=date)"
           git checkout -b "$branch"
           git add ./Formula
+          git add ./homebrew_core_commit
           git commit -m "Sync to $(cat ./homebrew_core_commit)"
           git push -u origin "$branch"
           gh pr create --fill
