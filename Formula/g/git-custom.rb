@@ -2,8 +2,8 @@ class GitCustom < Formula
   desc "Distributed revision control system"
   homepage "https://git-scm.com"
   # Don't forget to update the documentation resources along with the url!
-  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.42.0.tar.xz"
-  sha256 "3278210e9fd2994b8484dd7e3ddd9ea8b940ef52170cdb606daa94d887c93b0d"
+  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.42.1.tar.xz"
+  sha256 "8e46fa96bf35a65625d85fde50391e39bc0620d1bb39afb70b96c4a237a1a4f7"
   license "GPL-2.0-only"
   head "https://github.com/git/git.git", branch: "master"
 
@@ -28,13 +28,13 @@ class GitCustom < Formula
   conflicts_with "git", because: "both provide git with only different build flags"
 
   resource "html" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.42.0.tar.xz"
-    sha256 "c027ad23614d19685677899527360985ec9186e97528084dc4f8d611f6c3483f"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.42.1.tar.xz"
+    sha256 "8d593e8184cea31a3527e810a15d6e0851b2bd258c74b5293fbf32b167847421"
   end
 
   resource "man" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.42.0.tar.xz"
-    sha256 "03e0dc60a077ad31b10119e6619af8b50e652bd5c8a95c891523d73af1e573b9"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.42.1.tar.xz"
+    sha256 "3d0495a10351b3541056a7923c63f3fd8a54992914cf56301809af8c69636b5d"
   end
 
   resource "Net::SMTP::SSL" do
