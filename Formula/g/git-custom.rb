@@ -130,8 +130,6 @@ class GitCustom < Formula
     # install the completion script first because it is inside "contrib"
     bash_completion.install "contrib/completion/git-completion.bash"
     bash_completion.install "contrib/completion/git-prompt.sh"
-    zsh_completion.install "contrib/completion/git-completion.zsh" => "_git"
-    cp "#{bash_completion}/git-completion.bash", zsh_completion
 
     (share/"git-core").install "contrib"
 
