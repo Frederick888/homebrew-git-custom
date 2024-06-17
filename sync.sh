@@ -4,7 +4,7 @@ set -eo pipefail
 shopt -s inherit_errexit
 
 function cleanup() {
-    rm -rf ./homebrew-core
+  rm -rf ./homebrew-core
 }
 
 trap cleanup EXIT
@@ -16,16 +16,18 @@ last_commit="$(cat ./homebrew_core_commit)"
 declare -a commits
 
 git clone --shallow-since="$clone_from" https://github.com/Homebrew/homebrew-core.git
-while read -r commit; do
-    if [[ "$commit" == "$last_commit" ]]; then
-        break
-    fi
-    commits=("$commit" "${commits[@]}")
-done < <(git -C ./homebrew-core log --format='%H' --perl-regexp --author='^(?!BrewTestBot)' -- ./Formula/git.rb ./Formula/g/git.rb)
+git -C ./homebrew-core log --format='%H' --perl-regexp --author='^(?!BrewTestBot)' -- ./Formula/git.rb ./Formula/g/git.rb | while read -r commit; do
+  if [[ "$commit" == "$last_commit" ]]
+  then
+    break
+  fi
+  commits=("$commit" "${commits[@]}")
+done
 
 printf 'Applying commits %s\n' "${commits[*]}"
 
-for commit in "${commits[@]}"; do
-    git -C ./homebrew-core show "$commit" -- ./Formula/git.rb ./Formula/g/git.rb | sed 's/git.rb/git-custom.rb/g' | git apply -C1
-    printf '%s\n' "$commit" | tee ./homebrew_core_commit
+for commit in "${commits[@]}"
+do
+  git -C ./homebrew-core show "$commit" -- ./Formula/git.rb ./Formula/g/git.rb | sed 's/git.rb/git-custom.rb/g' | git apply -C1
+  printf '%s\n' "$commit" | tee ./homebrew_core_commit
 done
