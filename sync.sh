@@ -15,11 +15,13 @@ clone_from='Wed Apr 26 03:41:44 2023 +0800'
 last_commit="$(cat ./homebrew_core_commit)"
 declare -a commits
 
+REACHED_LAST_COMMIT=0
 git clone --shallow-since="$clone_from" https://github.com/Homebrew/homebrew-core.git
 git -C ./homebrew-core log --format='%H' --perl-regexp --author='^(?!BrewTestBot)' -- ./Formula/git.rb ./Formula/g/git.rb | while read -r commit; do
-  if [[ "$commit" == "$last_commit" ]]
+  if [[ $REACHED_LAST_COMMIT -gt 0 ]] || [[ "$commit" == "$last_commit" ]]
   then
-    break
+    REACHED_LAST_COMMIT=1
+    continue
   fi
   commits=("$commit" "${commits[@]}")
 done
