@@ -17,14 +17,18 @@ declare -a commits
 
 REACHED_LAST_COMMIT=0
 git clone --shallow-since="$clone_from" https://github.com/Homebrew/homebrew-core.git
-git -C ./homebrew-core log --format='%H' --perl-regexp --author='^(?!BrewTestBot)' -- ./Formula/git.rb ./Formula/g/git.rb | while read -r commit; do
+while read -r commit
+do
   if [[ $REACHED_LAST_COMMIT -gt 0 ]] || [[ "$commit" == "$last_commit" ]]
   then
     REACHED_LAST_COMMIT=1
     continue
   fi
   commits=("$commit" "${commits[@]}")
-done
+done < <(
+  # shellcheck disable=SC2312
+  git -C ./homebrew-core log --format='%H' --perl-regexp --author='^(?!BrewTestBot)' -- ./Formula/git.rb ./Formula/g/git.rb
+)
 
 printf 'Applying commits %s\n' "${commits[*]}"
 
