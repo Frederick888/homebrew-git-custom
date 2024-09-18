@@ -34,6 +34,10 @@ printf 'Applying commits %s\n' "${commits[*]}"
 
 for commit in "${commits[@]}"
 do
+  if grep "^$commit" ./homebrew_core_ignored_commits
+  then
+    continue
+  fi
   git -C ./homebrew-core show "$commit" -- ./Formula/git.rb ./Formula/g/git.rb | sed 's/git.rb/git-custom.rb/g' | git apply -C1
   printf '%s\n' "$commit" | tee ./homebrew_core_commit
 done
