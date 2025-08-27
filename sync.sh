@@ -36,6 +36,11 @@ for commit in "${commits[@]}"
 do
   if grep "^$commit" ./homebrew_core_ignored_commits
   then
+    printf 'Ignoring commit %s as it was found in homebrew_core_ignored_commits\n' "$commit"
+    continue
+  fi
+  if [[ "$(git -C ./homebrew-core show --no-patch --format='%s' "$commit")" == *'update'*'bottle'* ]]; then
+    printf 'Ignoring commit %s as it appears to be a manual bottle update\n' "$commit"
     continue
   fi
   git -C ./homebrew-core show "$commit" -- ./Formula/git.rb ./Formula/g/git.rb | sed 's/git.rb/git-custom.rb/g' | git apply -C1
