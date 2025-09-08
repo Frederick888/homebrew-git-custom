@@ -22,7 +22,6 @@ class GitCustom < Formula
   uses_from_macos "zlib", since: :high_sierra
 
   on_linux do
-    depends_on "linux-headers@5.15" => :build
     depends_on "openssl@3" # Uses CommonCrypto on macOS
   end
 
