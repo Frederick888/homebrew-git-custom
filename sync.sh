@@ -11,7 +11,7 @@ trap cleanup EXIT
 
 set -x
 
-clone_from='Wed Apr 26 03:41:44 2023 +0800'
+clone_from='Tue Jul 01 00:00:00 2025 +0000'
 last_commit="$(cat ./homebrew_core_commit)"
 declare -a commits
 
