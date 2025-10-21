@@ -9,8 +9,6 @@ function cleanup() {
 
 trap cleanup EXIT
 
-set -x
-
 clone_from='Tue Jul 01 00:00:00 2025 +0000'
 last_commit="$(cat ./homebrew_core_commit)"
 declare -a commits
