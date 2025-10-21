@@ -27,7 +27,7 @@ do
   commits=("$commit" "${commits[@]}")
 done < <(
   # shellcheck disable=SC2312
-  git -C ./homebrew-core log --format='%H' --perl-regexp --author='^(?!BrewTestBot)' -- ./Formula/git.rb ./Formula/g/git.rb
+  git -C ./homebrew-core log --format='%H' -- ./Formula/git.rb ./Formula/g/git.rb
 )
 
 printf 'Applying commits %s\n' "${commits[*]}"
@@ -41,7 +41,7 @@ do
   fi
   if [[ "$(git -C ./homebrew-core show --no-patch --format='%s' "$commit" || true)" == *'update'*'bottle'* ]]
   then
-    printf 'Ignoring commit %s as it appears to be a manual bottle update\n' "$commit"
+    printf 'Ignoring commit %s as it appears to be a bottle update\n' "$commit"
     continue
   fi
   git -C ./homebrew-core show "$commit" -- ./Formula/git.rb ./Formula/g/git.rb | sed 's/git.rb/git-custom.rb/g' | git apply -C1
