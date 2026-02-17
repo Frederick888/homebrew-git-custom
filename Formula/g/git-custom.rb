@@ -1,10 +1,9 @@
 class GitCustom < Formula
   desc "Distributed revision control system"
   homepage "https://git-scm.com"
-  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.52.0.tar.xz"
-  sha256 "3cd8fee86f69a949cb610fee8cd9264e6873d07fa58411f6060b3d62729ed7c5"
+  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.53.0.tar.xz"
+  sha256 "5818bd7d80b061bbbdfec8a433d609dc8818a05991f731ffc4a561e2ca18c653"
   license "GPL-2.0-only"
-  revision 1
   head "https://github.com/git/git.git", branch: "master"
 
   livecheck do
@@ -15,12 +14,12 @@ class GitCustom < Formula
   no_autobump! because: :requires_manual_review
 
   depends_on "bash"
+  depends_on "pkgconf" => :build
   depends_on "gettext"
   depends_on "pcre2"
 
   uses_from_macos "curl"
   uses_from_macos "expat"
-  uses_from_macos "zlib"
 
   on_macos do
     depends_on "libiconv"
@@ -28,18 +27,19 @@ class GitCustom < Formula
 
   on_linux do
     depends_on "openssl@3" # Uses CommonCrypto on macOS
+    depends_on "zlib-ng-compat"
   end
 
   conflicts_with "git", because: "both provide git with only different build flags"
 
   resource "Authen::SASL" do
-    url "https://cpan.metacpan.org/authors/id/E/EH/EHUELS/Authen-SASL-2.1900.tar.gz"
-    sha256 "be3533a6891b2e677150b479c1a0d4bf11c8bbeebed3e7b8eba34053e93923b0"
+    url "https://cpan.metacpan.org/authors/id/E/EH/EHUELS/Authen-SASL-2.2000.tar.gz"
+    sha256 "8cdf5a7f185448b614471675dae5b26f8c6e330b62264c3ff5d91172d6889b99"
   end
 
   resource "html" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.52.0.tar.xz"
-    sha256 "e6efd0da47a15b6a59401c8c5c8944e4315b18a176b89bb57812778d6307be84"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.53.0.tar.xz"
+    sha256 "994b93cbf25a9c13f1206dcc1751f0559633d5152155e16fc025ab776af08e0d"
 
     livecheck do
       formula :parent
@@ -47,8 +47,8 @@ class GitCustom < Formula
   end
 
   resource "man" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.52.0.tar.xz"
-    sha256 "23186deddb3083bbaa9eb947cde26a5c7322d7fdb75bb4b3d60795db38221ac5"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.53.0.tar.xz"
+    sha256 "957ffe4409eeb90c7332bff4abee8d5169d28ef5c7c3bf08419f4239be13f77f"
 
     livecheck do
       formula :parent
@@ -58,6 +58,12 @@ class GitCustom < Formula
   resource "Net::SMTP::SSL" do
     url "https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Net-SMTP-SSL-1.04.tar.gz"
     sha256 "7b29c45add19d3d5084b751f7ba89a8e40479a446ce21cfd9cc741e558332a00"
+  end
+
+  # https://lore.kernel.org/git/pull.2046.v2.git.1770775169908.gitgitgadget@gmail.com/
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/homebrew-core/46d746f92167fd0559af22f4ccb79c9ff35fbe33/Patches/git/2.53.0-osxkeychain-top-level-makefile.patch"
+    sha256 "d640f0105be66631634123de1a2cd6d950efe62b4d51c7c889fa57521a0a60cd"
   end
 
   def install
