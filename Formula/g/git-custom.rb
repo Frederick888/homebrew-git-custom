@@ -13,8 +13,8 @@ class GitCustom < Formula
 
   no_autobump! because: :requires_manual_review
 
-  depends_on "bash"
   depends_on "pkgconf" => :build
+  depends_on "bash"
   depends_on "gettext"
   depends_on "pcre2"
 
