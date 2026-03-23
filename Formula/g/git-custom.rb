@@ -4,6 +4,8 @@ class GitCustom < Formula
   url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.53.0.tar.xz"
   sha256 "5818bd7d80b061bbbdfec8a433d609dc8818a05991f731ffc4a561e2ca18c653"
   license "GPL-2.0-only"
+  revision 1
+  compatibility_version 1
   head "https://github.com/git/git.git", branch: "master"
 
   livecheck do
@@ -21,9 +23,8 @@ class GitCustom < Formula
   uses_from_macos "curl"
   uses_from_macos "expat"
 
-  on_macos do
-    depends_on "libiconv"
-  end
+  # Don't try to add a libiconv dependency without reading this PR first:
+  # https://github.com/Homebrew/homebrew-core/pull/258461
 
   on_linux do
     depends_on "openssl@3" # Uses CommonCrypto on macOS
@@ -83,7 +84,6 @@ class GitCustom < Formula
     perl_version = Utils.safe_popen_read("perl", "--version")[/v(\d+\.\d+)(?:\.\d+)?/, 1]
 
     if OS.mac?
-      ENV["ICONVDIR"] = Formula["libiconv"].opt_prefix
       ENV["PERLLIB_EXTRA"] = %W[
         #{MacOS.active_developer_dir}
         /Library/Developer/CommandLineTools
