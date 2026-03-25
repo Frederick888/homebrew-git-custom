@@ -13,8 +13,6 @@ class GitCustom < Formula
     regex(/href=.*?git[._-]v?(\d+(?:\.\d+)+)\.t/i)
   end
 
-  no_autobump! because: :requires_manual_review
-
   depends_on "pkgconf" => :build
   depends_on "bash"
   depends_on "gettext"
