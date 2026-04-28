@@ -1,8 +1,8 @@
 class GitCustom < Formula
   desc "Distributed revision control system"
   homepage "https://git-scm.com"
-  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.53.0.tar.xz"
-  sha256 "5818bd7d80b061bbbdfec8a433d609dc8818a05991f731ffc4a561e2ca18c653"
+  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.54.0.tar.xz"
+  sha256 "f689162364c10de79ef89aa8dbf48731eb057e34edbbd20aca510ce0154681a3"
   license all_of: [
     "GPL-2.0-only",
     "GPL-2.0-or-later",  # imap-send.c; trace.c; ...
@@ -10,7 +10,6 @@ class GitCustom < Formula
     "BSD-3-Clause",      # xdiff/xhistogram.c; reftable/
     "MIT",               # khash.h; sha1dc/
   ]
-  revision 1
   compatibility_version 1
   head "https://github.com/git/git.git", branch: "master"
 
@@ -47,8 +46,8 @@ class GitCustom < Formula
   end
 
   resource "html" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.53.0.tar.xz"
-    sha256 "994b93cbf25a9c13f1206dcc1751f0559633d5152155e16fc025ab776af08e0d"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.54.0.tar.xz"
+    sha256 "7ff72bfdfed4f20563f34416cf27614fb9c35bfad590db0062f2a0a9636514e4"
 
     livecheck do
       formula :parent
@@ -56,8 +55,8 @@ class GitCustom < Formula
   end
 
   resource "man" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.53.0.tar.xz"
-    sha256 "957ffe4409eeb90c7332bff4abee8d5169d28ef5c7c3bf08419f4239be13f77f"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.54.0.tar.xz"
+    sha256 "292062d18f3a215213ea8317ed22b94f02ad9572520b9293164d7db3eb888953"
 
     livecheck do
       formula :parent
@@ -67,12 +66,6 @@ class GitCustom < Formula
   resource "Net::SMTP::SSL" do
     url "https://cpan.metacpan.org/authors/id/R/RJ/RJBS/Net-SMTP-SSL-1.04.tar.gz"
     sha256 "7b29c45add19d3d5084b751f7ba89a8e40479a446ce21cfd9cc741e558332a00"
-  end
-
-  # https://lore.kernel.org/git/pull.2046.v2.git.1770775169908.gitgitgadget@gmail.com/
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/homebrew-core/532a668f0f725a69342cbac3414475a28bd0575d/Patches/git/2.53.0-osxkeychain-top-level-makefile.patch"
-    sha256 "ef3f390f940e080548474950380edb008f31e5fd500c8ad1d470fc764b6e65ac"
   end
 
   def install
