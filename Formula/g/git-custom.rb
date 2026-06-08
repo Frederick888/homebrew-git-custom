@@ -68,6 +68,8 @@ class GitCustom < Formula
     sha256 "7b29c45add19d3d5084b751f7ba89a8e40479a446ce21cfd9cc741e558332a00"
   end
 
+  deny_network_access! [:build, :postinstall]
+
   def install
     odie "html resource needs to be updated" if build.stable? && version != resource("html").version
     odie "man resource needs to be updated" if build.stable? && version != resource("man").version
