@@ -1,3 +1,4 @@
 5f57707f1d23aa10662899bb80a0c1ef74d18966  # added sequoia bottle
 b4bd0ea26ae9b6ad4adb2b5846d063e9f71d96ac  # added arm64_linux bottle
 24141c7e1b7dba7fd612fd0bd3596ea790fed91c  # no_autobump, applied manually
+720af38f701def8cbea86cbfb070ab67432a4fd1  # Zsh completion, we use the one from Zsh itself
